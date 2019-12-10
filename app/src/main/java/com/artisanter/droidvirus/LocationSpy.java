@@ -41,6 +41,6 @@ public class LocationSpy {
             outputStreamWriter.write(loc.getLatitude() + " " + loc.getLongitude());
             outputStreamWriter.close();
         }
-        catch (IOException e) {}
+        catch (IOException ignored) {}
     }
 }
