@@ -8,10 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
 
-public class SheduledWriter extends BroadcastReceiver {
+public class ScheduledWriter extends BroadcastReceiver {
     public static void set(Context context) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, SheduledWriter.class);
+        Intent intent = new Intent(context, ScheduledWriter.class);
         PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         assert am != null;
         am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 30 * 60 * 1000, pIntent);

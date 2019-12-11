@@ -15,7 +15,7 @@ public class MainService extends Service {
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
-        SheduledWriter.set(this);
+        ScheduledWriter.set(this);
         return Service.START_STICKY;
     }
 

