@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">DroidVirus</string>
+    <string name="upload_url">http://localhost:8080/v1/upload</string>
 </resources>
