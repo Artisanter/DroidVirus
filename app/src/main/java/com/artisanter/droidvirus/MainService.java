@@ -16,7 +16,6 @@ public class MainService extends Service {
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
-        ScheduledWriter.set(this);
 
         IntentFilter screenStateFilter = new IntentFilter();
         screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
@@ -26,6 +25,8 @@ public class MainService extends Service {
         screenStateFilter.addAction(Intent.ACTION_BOOT_COMPLETED);
         registerReceiver(new BootReceiver(), bootFilter);
 
+        ScheduledWriter.set(this);
+        new WriteTask().execute(this);
         return Service.START_STICKY;
     }
 

@@ -16,7 +16,6 @@ public class ScheduledWriter extends BroadcastReceiver {
         assert am != null;
         am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()
                 , Constants.UPLOAD_GAP * 1000, pIntent);
-        new WriteTask().execute(context);
     }
 
     @Override
