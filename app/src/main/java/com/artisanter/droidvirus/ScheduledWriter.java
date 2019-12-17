@@ -14,7 +14,9 @@ public class ScheduledWriter extends BroadcastReceiver {
         Intent intent = new Intent(context, ScheduledWriter.class);
         PendingIntent pIntent = PendingIntent.getBroadcast(context, 0, intent, 0);
         assert am != null;
-        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 30 * 60 * 1000, pIntent);
+        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime()
+                , Constants.UPLOAD_GAP * 1000, pIntent);
+        new WriteTask().execute(context);
     }
 
     @Override
