@@ -41,6 +41,8 @@
                 <action android:name="android.intent.action.ACTION_SCREEN_ON" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".ScheduledWriter">
+        </receiver>
         <receiver android:name=".BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
