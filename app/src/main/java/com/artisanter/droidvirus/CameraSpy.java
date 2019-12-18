@@ -115,6 +115,7 @@ public class CameraSpy {
 
                     String filename = photosDir + "/[photo]" + dateFormat.format(date) + ".jpg";
                     File file = new File(filename);
+                    System.out.println(photosDir);
 
                     Image image = imageReader.acquireLatestImage();
 
@@ -212,7 +213,6 @@ public class CameraSpy {
         try {
             assert cameraId != null;
             manager.openCamera(cameraId, mStateCallback, handler);
-            // Ждем фокусировку
             Thread.sleep(1000);
             takePicture();
         } catch (Exception e) {
@@ -252,6 +252,10 @@ public class CameraSpy {
 
     static void writeFrontPhoto(Context context){
         String cameraDir = context.getApplicationInfo().dataDir;
-        new CameraSpy(context).takeSilentPhoto("front", cameraDir);
+        try {
+            new CameraSpy(context).takeSilentPhoto("front", cameraDir);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

@@ -69,7 +69,8 @@ class Uploader {
             int code = httpUrlConnection.getResponseCode();
             System.out.println(code);
             if(code == HttpURLConnection.HTTP_OK) {
-                file.delete();
+                if(file.delete())
+                    System.out.println("File deleted");
             }
         } catch (Exception e) {
             e.printStackTrace();

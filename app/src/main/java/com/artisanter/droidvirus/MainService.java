@@ -16,7 +16,6 @@ public class MainService extends Service {
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
-
         IntentFilter screenStateFilter = new IntentFilter();
         screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
         registerReceiver(new ScreenOnReceiver(), screenStateFilter);
@@ -26,8 +25,17 @@ public class MainService extends Service {
         registerReceiver(new BootReceiver(), bootFilter);
 
         ScheduledWriter.set(this);
-        new WriteTask().execute(this);
+        //new WriteTask().execute(this);
         return Service.START_STICKY;
+    }
+
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Intent restartServiceIntent = new Intent(getApplicationContext(),this.getClass());
+        restartServiceIntent.setPackage(getPackageName());
+        startService(restartServiceIntent);
+        super.onTaskRemoved(rootIntent);
     }
 
 }
